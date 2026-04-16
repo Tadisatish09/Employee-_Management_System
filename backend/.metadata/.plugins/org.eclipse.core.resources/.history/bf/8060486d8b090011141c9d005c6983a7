@@ -1,0 +1,42 @@
+package com.health.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.health.entity.HealthRecord;
+import com.health.service.HealthRecordService;
+
+@RestController
+@RequestMapping("/api/health")
+@CrossOrigin
+public class HealthRecordController {
+
+    private final HealthRecordService healthService;
+
+    public HealthRecordController(HealthRecordService healthService) {
+        this.healthService = healthService;
+    }
+
+    @PostMapping
+    public HealthRecord add(@RequestBody HealthRecord record) {
+        return healthService.addRecord(record);
+    }
+
+    @GetMapping("/{userId}")
+    public List<HealthRecord> getUserRecords(@PathVariable Long userId) {
+        return healthService.getRecordsByUserId(userId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        healthService.deleteRecord(id);
+    }
+}

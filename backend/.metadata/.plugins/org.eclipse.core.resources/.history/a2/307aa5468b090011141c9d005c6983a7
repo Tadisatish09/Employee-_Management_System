@@ -1,0 +1,48 @@
+package com.health.service.imp1;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.health.entity.HealthRecord;
+import com.health.repository.HealthRecordRepository;
+import com.health.service.HealthRecordService;
+
+@Service
+public class HealthRecordServiceImpl implements HealthRecordService {
+
+    private final HealthRecordRepository recordRepository;
+
+    public HealthRecordServiceImpl(HealthRecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
+    }
+
+    @Override
+    public HealthRecord addRecord(HealthRecord record) {
+
+        record.setRecordedAt(LocalDateTime.now());
+
+        if (record.getHeartRate() > 120) {
+            System.out.println("⚠ High Heart Rate Warning!");
+        }
+
+        return recordRepository.save(record);
+    }
+
+    @Override
+    public List<HealthRecord> getRecordsByUserId(Long userId) {
+        return recordRepository.findByUserId(userId);
+    }
+
+    @Override
+    public HealthRecord getRecordById(Long id) {
+        return recordRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Record not found"));
+    }
+
+    @Override
+    public void deleteRecord(Long id) {
+        recordRepository.deleteById(id);
+    }
+}
